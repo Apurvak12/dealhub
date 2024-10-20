@@ -4,6 +4,7 @@ import Searchbar from './Searchbar';
 // import Image from 'next/image'; // You may want to replace this with a regular img tag.
 // import { getAllProducts } from '@/lib/actions'; // Adjust the import path as needed.
 import ProductCard from './ProductCard';
+import rightarrow from '../assests/icons/arrow-right.svg';
 
 
 const getAllProducts = async () => {
@@ -40,17 +41,23 @@ const Home = () => {
           <div className="flex flex-col justify-center"> 
             <p className="small-text">
               Smart Shopping Starts Here:
-              <img 
-                src="/assets/icons/arrow-right.svg" 
+              {/* <img
+                src="/assests/icons/arrow-right.svg" 
                 alt="arrow-right" 
                 width={16} 
                 height={16} 
+              /> */}
+              <img
+              src={rightarrow}
+              alt='rightarrow'
+              width={16}
+              height={16}
               />
             </p>
 
             <h1 className="head-text">
               Unleash the Power of
-              <span className="text-primary"> PriceWise</span>
+              <span className="text-primary"> DealHUB</span>
             </h1>
 
             <p className="mt-6">
