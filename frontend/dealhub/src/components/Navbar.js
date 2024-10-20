@@ -4,6 +4,9 @@ import logo from '../assests/icons/logo.svg';
 import searchIcon from '../assests/icons/search.svg';
 import heartIcon from '../assests/icons/black-heart.svg';
 import userIcon from '../assests/icons/user.svg';
+import './Navbar.css';
+
+
 
 const navIcons = [
   { src: searchIcon, alt: 'search' },
