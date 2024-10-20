@@ -1,26 +1,22 @@
 import React from 'react';
 import Hero from './Hero';
 import Searchbar from './Searchbar';
-// import Image from 'next/image'; // You may want to replace this with a regular img tag.
-// import { getAllProducts } from '@/lib/actions'; // Adjust the import path as needed.
 import ProductCard from './ProductCard';
-import rightarrow from '../assests/icons/arrow-right.svg';
-
+import rightarrow from '../assests/icons/arrow-right.svg'; 
 
 const getAllProducts = async () => {
   try {
-    const response = await fetch('https://your-api-url.com/products'); // Replace with your actual API endpoint
+    const response = await fetch('https://your-api-url.com/products');
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
     const data = await response.json();
-    return data; // Assuming the data is in the format of an array of products
+    return data;
   } catch (error) {
     console.error('Error fetching products:', error);
-    return []; // Return an empty array in case of an error
+    return [];
   }
 };
-
 
 const Home = () => {
   const [allProducts, setAllProducts] = React.useState([]);
@@ -36,31 +32,24 @@ const Home = () => {
 
   return (
     <>
-      <section className="px-6 md:px-20 py-24">
-        <div className="flex max-xl:flex-col gap-16">
-          <div className="flex flex-col justify-center"> 
-            <p className="small-text">
-              Smart Shopping Starts Here:
-              {/* <img
-                src="/assests/icons/arrow-right.svg" 
-                alt="arrow-right" 
-                width={16} 
-                height={16} 
-              /> */}
+      <section className="home-hero-section">
+        <div className="home-hero-container">
+          <div className="home-hero-content"> 
+            <p className="home-subtext">
+            <span>Smart Shopping Starts Here:</span>  
               <img
-              src={rightarrow}
-              alt='rightarrow'
-              width={16}
-              height={16}
+                src={rightarrow}
+                alt="rightarrow"
+                className="home-arrow-icon"
               />
             </p>
 
-            <h1 className="head-text">
+            <h1 className="home-title">
               Unleash the Power of
-              <span className="text-primary"> DealHUB</span>
+              <p className="home-title-highlight"> DealHUB</p>
             </h1>
 
-            <p className="mt-6">
+            <p className="home-description">
               Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.
             </p>
 
@@ -71,10 +60,10 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="trending-section">
-        <h2 className="section-text">Trending</h2>
+      <section className="home-trending-section">
+        <h2 className="home-section-title">Trending</h2>
 
-        <div className="flex flex-wrap gap-x-8 gap-y-16">
+        <div className="home-product-grid">
           {allProducts.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
