@@ -1,3 +1,6 @@
+from __future__ import annotations
+import random
+
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -22,60 +25,56 @@ def scrape_amazon_product(url):
     if not url:
         return None
 
-    # BrightData proxy configuration (for illustration, use your actual proxy if needed)
-    username = os.getenv('BRIGHT_DATA_USERNAME')
-    password = os.getenv('BRIGHT_DATA_PASSWORD')
-    port = 22225
-    session_id = int(1000000 * random.random())
-
-    # Proxy settings
-    proxy_url = f"http://{username}-session-{session_id}:{password}@brd.superproxy.io:{port}"
-    proxies = {
-        'http': proxy_url,
-        'https': proxy_url,
-    }
-
+    # Define headers
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     }
 
     try:
-        # Fetch the product page
-        response = requests.get(url, headers=headers, proxies=proxies)
-        response.raise_for_status()  # Raise an error for bad responses
-
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Extract the product title
-        title = soup.select_one('#productTitle').text.strip()
+        # Get the title safely
+        title_element = soup.select_one('#productTitle')
+        title = title_element.text.strip() if title_element else "Unknown Title"
 
-        current_price = extract_price([
-            soup.select_one('.priceToPay .a-price-whole'),
-            soup.select_one('.a.size.base.a-color-price'),
-            soup.select_one('.a-button-selected .a-color-base'),
-        ])
-
-        original_price = extract_price([
+        # Get the current price safely
+        current_price_elements = [
+            soup.select_one('.a-price .a-price-whole'),
             soup.select_one('#priceblock_ourprice'),
-            soup.select_one('.a-price.a-text-price span.a-offscreen'),
-            soup.select_one('#listPrice'),
             soup.select_one('#priceblock_dealprice'),
+        ]
+        current_price = extract_price([elem for elem in current_price_elements if elem is not None])
+
+        # Get the original price safely
+        original_price_elements = [
+            soup.select_one('.a-price .a-price-symbol'),
+            soup.select_one('.a-price.a-text-price span.a-offscreen'),
             soup.select_one('.a-size-base.a-color-price'),
-        ])
+        ]
+        original_price = extract_price([elem for elem in original_price_elements if elem is not None])
 
-        out_of_stock = soup.select_one('#availability span').text.strip().lower() == 'currently unavailable'
+        # Check if it's out of stock
+        out_of_stock_element = soup.select_one('#availability span')
+        out_of_stock = out_of_stock_element and out_of_stock_element.text.strip().lower() == 'currently unavailable'
 
+        # Handle images
+        img_blk_front = soup.select_one('#imgBlkFront')
+        landing_image = soup.select_one('#landingImage')
         images = (
-            soup.select_one('#imgBlkFront')['data-a-dynamic-image'] or
-            soup.select_one('#landingImage')['data-a-dynamic-image'] or
-            '{}'
+            img_blk_front['src'] if img_blk_front else
+            landing_image['src'] if landing_image else
+            None
         )
+        image_urls = [images] if images else []
 
-        image_urls = list(json.loads(images).keys())
-
+        # Extract currency and discount rate safely
         currency = extract_currency(soup.select_one('.a-price-symbol'))
-        discount_rate = soup.select_one('.savingsPercentage').text.replace('-', '').replace('%', '')
+        discount_rate_element = soup.select_one('.savingsPercentage')
+        discount_rate = discount_rate_element.text.replace('-', '').replace('%', '') if discount_rate_element else "0"
 
+        # Description extraction
         description = extract_description(soup)
 
         # Construct data object with scraped information
@@ -104,9 +103,10 @@ def scrape_amazon_product(url):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-# Example usage:
+
+
+ #Example usage:
 if __name__ == "__main__":
-    url = "https://www.amazon.com/example-product-url"
+    url = ""
     product_data = scrape_amazon_product(url)
     print(product_data)
-
