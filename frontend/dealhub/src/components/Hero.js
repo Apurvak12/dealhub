@@ -12,6 +12,7 @@ import hero3 from '../assests/images/hero-3.svg';
 import hero4 from '../assests/images/hero-4.svg';
 import hero5 from '../assests/images/hero-5.svg';
 import hero6 from '../assests/images/hero-6.png';
+import hand from '../assests/icons/hand-drawn-arrow.svg';
 const heroImages = [ 
    { src: hero1  , alt: 'smartwatch'},
  { src: hero2 , alt: 'bag'},
@@ -43,7 +44,7 @@ const Hero = () => {
       </Carousel>
 
       <img 
-        src="/assests/icons/hand-drawn-arrow.svg" 
+        src={hand}
         alt="arrow" 
         width={175} 
         height={175} 
