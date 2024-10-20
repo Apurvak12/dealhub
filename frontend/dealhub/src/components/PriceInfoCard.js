@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+//have to install prop-types
+//command npm install prop-types
+
+
 
 const PriceInfoCard = ({ title, iconSrc, value }) => {
   return (
