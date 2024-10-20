@@ -4,10 +4,16 @@ import Navbar from './components/Navbar';
 
 function App() {
   
-  return (
+  return (<>
     <div className="App">
        <Navbar/>
     </div>
+    <div>
+    <PriceInfoCard title="Price" iconSrc="/icons/price-icon.png" value="$100" />
+
+
+    </div>
+    </>
   );
 }
 
