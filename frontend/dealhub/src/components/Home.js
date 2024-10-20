@@ -1,9 +1,25 @@
 import React from 'react';
 import Hero from './Hero';
 import Searchbar from './Searchbar';
-import Image from 'next/image'; // You may want to replace this with a regular img tag.
-import { getAllProducts } from '@/lib/actions'; // Adjust the import path as needed.
+// import Image from 'next/image'; // You may want to replace this with a regular img tag.
+// import { getAllProducts } from '@/lib/actions'; // Adjust the import path as needed.
 import ProductCard from './ProductCard';
+
+
+const getAllProducts = async () => {
+  try {
+    const response = await fetch('https://your-api-url.com/products'); // Replace with your actual API endpoint
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data; // Assuming the data is in the format of an array of products
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return []; // Return an empty array in case of an error
+  }
+};
+
 
 const Home = () => {
   const [allProducts, setAllProducts] = React.useState([]);
