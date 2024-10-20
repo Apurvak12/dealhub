@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assests/icons/logo.svg';
+import searchIcon from '../assests/icons/search.svg';
+import heartIcon from '../assests/icons/black-heart.svg';
+import userIcon from '../assests/icons/user.svg';
 
 const navIcons = [
-  { src: '/assets/icons/search.svg', alt: 'search' },
-  { src: '/assets/icons/black-heart.svg', alt: 'heart' },
-  { src: '/assets/icons/user.svg', alt: 'user' },
+  { src: searchIcon, alt: 'search' },
+  { src: heartIcon, alt: 'heart' },
+  { src: userIcon, alt: 'user' },
 ];
 
 const Navbar = () => {
@@ -13,7 +17,7 @@ const Navbar = () => {
       <nav className="nav">
         <Link to="/" className="flex items-center gap-1">
           <img 
-            src="/assets/icons/logo.svg"
+            src={logo}
             width={27}
             height={27}
             alt="logo"
@@ -41,3 +45,4 @@ const Navbar = () => {
 }
 
 export default Navbar;
+
