@@ -1,38 +1,81 @@
-.App {
-  text-align: center;
+.hero-carousel {
+  position: relative;
+  max-width: 100%;
+  height: auto;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.head-text {
+  font-size: 2.5rem; /* Adjust font size as needed */
+  line-height: 1.2;
+  margin-top: 1rem; /* Add margin for spacing */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.small-text {
+  font-size: 1.125rem; /* Adjust font size as needed */
+}
+
+.searchbar-input {
+  padding: 0.75rem; /* Add padding for better touch area */
+  border-radius: 0.5rem; /* Rounded corners */
+  border: 1px solid #ccc; /* Border style */
+  width: 100%; /* Full width */
+  max-width: 400px; /* Set max width for the input */
+  transition: border-color 0.3s; /* Transition for border color */
+}
+
+.searchbar-input:focus {
+  border-color: #0070f3; /* Change border color on focus */
+  outline: none; /* Remove outline */
+}
+
+.searchbar-btn {
+  background-color: #0070f3; /* Button background */
+  color: white; /* Button text color */
+  padding: 0.75rem 1.5rem; /* Padding for button */
+  border-radius: 0.5rem; /* Rounded corners */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s; /* Transition for background color */
+}
+
+.searchbar-btn:hover {
+  background-color: #005bb5; /* Darker color on hover */
+}
+
+.trending-section {
+  padding: 2rem 0; /* Padding for trending section */
+}
+
+.section-text {
+  font-size: 2rem; /* Font size for section title */
+  margin-bottom: 1rem; /* Space below the title */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .head-text {
+    font-size: 2rem; /* Smaller font size on smaller screens */
+  }
+
+  .searchbar-input {
+    width: auto; /* Allow input to shrink */
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+@media (min-width: 768px) {
+  .nav-links {
+    font-size: 1.5rem; /* text-2xl */
   }
 }
+
+@media (min-width: 1024px) {
+  .hero-carousel {
+    padding: 2.5rem; /* py-10 */
+  }
+}
+
+
+
+
+
+

@@ -107,6 +107,6 @@ def scrape_amazon_product(url):
 
  #Example usage:
 if __name__ == "__main__":
-    url = "https://www.amazon.com/dp/B07FZ8S74R"
+    url = ""
     product_data = scrape_amazon_product(url)
     print(product_data)

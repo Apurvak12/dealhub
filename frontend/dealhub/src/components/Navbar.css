@@ -1,0 +1,53 @@
+/* Navbar.css */
+
+.nav {
+    display: flex;
+    justify-content: space-between; /* Align items to space out logo and icons */
+    align-items: center; /* Center items vertically */
+    padding: 10px 20px; /* Add some padding */
+    background-color: #fff; /* Background color for the navbar */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  .nav-logo {
+    font-size: 24px; /* Logo font size */
+    font-weight: bold; /* Bold font */
+    color: #333; /* Text color */
+    text-transform: uppercase; /* Uppercase letters for style */
+  }
+  
+  .text-primary {
+    color: #007bff; /* Primary color for the highlighted text */
+  }
+  
+  .flex {
+    display: flex; /* Use flexbox for alignment */
+  }
+  
+  .items-center {
+    align-items: center; /* Center items vertically */
+  }
+  
+  .gap-1 {
+    gap: 5px; /* Gap between logo and text */
+  }
+  
+  .gap-5 {
+    gap: 20px; /* Gap between navigation icons */
+  }
+  
+  .object-contain {
+    display: block; /* Display block for proper alignment */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .nav {
+      flex-direction: column;
+      align-items: flex-start; 
+    }
+  
+    .gap-5 {
+      gap: 15px;
+    }
+  }
