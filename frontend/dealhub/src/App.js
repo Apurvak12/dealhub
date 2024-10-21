@@ -1,13 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Home from './components/Home';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Navbar from './components/Navbar';
+import Home from './components/Home';
 import PriceInfoCard from './components/PriceInfoCard';
 import ProductCard from './components/ProductCard';
-import Searchbar from './components/Searchbar';
+import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -16,50 +13,33 @@ function App() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('/api/products'); // Fetching all products
+        const response = await axios.get('/api/products');
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
-    const fetchPriceInfo = async () => {
-      try {
-        const response = await axios.get('/api/price-info'); // Adjust the endpoint for price info
-        setPriceInfo(response.data);
-      } catch (error) {
-        console.error("Error fetching price info:", error);
-      }
-    };
-
     fetchProducts();
-    fetchPriceInfo();
   }, []);
 
   return (
     <>
-      <div className="App">
-        <Navbar />
-        <Home />
-      </div>
-
-      <div>
-        {/* Render PriceInfoCard */}
-        <PriceInfoCard
-          title={priceInfo.title}
-          iconSrc={priceInfo.iconSrc}
-          value={priceInfo.value}
-        />
-
-        {/* Render ProductCards */}
-        <div className="product-list">
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
+      <Navbar />
+      <Home />
+      <PriceInfoCard
+        title={priceInfo.title}
+        iconSrc={priceInfo.iconSrc}
+        value={priceInfo.value}
+      />
+      <div className="product-list">
+        {products.map((product) => (
+          <ProductCard key={product._id} product={product} />
+        ))}
       </div>
     </>
   );
 }
 
 export default App;
+
