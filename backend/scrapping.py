@@ -13,6 +13,7 @@ def create_table():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             image_url TEXT,
             title TEXT,
             current_price INTEGER,
             original_price INTEGER,
@@ -26,7 +27,7 @@ def create_table():
     conn.close()
 
 
-def insert_or_update_product(title, current_price):
+def insert_or_update_product(title, current_price,image_url):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
@@ -86,6 +87,7 @@ def fetch_webpage_content(url: str):
         # Fetch the product title (example assumes title is in <span> with id='productTitle')
         title = soup.find('span', id='productTitle')
         price = soup.find('span', class_='a-price-whole')  
+        image = soup.find('img', id='landingImage')
         product_details = soup.find('table', class_='a-normal a-spacing-micro')
 
         # Check if title and price are found
@@ -93,10 +95,12 @@ def fetch_webpage_content(url: str):
             title_text = title.get_text(strip=True)
             price_text = price.get_text(strip=True)
             current_price = clean_and_convert_price(price_text)
+            image_url = image['src']
 
             # Print the fetched product title and price
             print("Product Title:", title_text)
             print("Product Price:", price_text)
+            print("Product Image URL:", image_url)
 
             # Prepare to collect product details
             table_data = {}
@@ -114,7 +118,7 @@ def fetch_webpage_content(url: str):
                 for key, value in table_data.items():
                     print(f"{key}: {value}")
 
-            return [title_text, current_price, table_data]
+            return [title_text, current_price, image_url,table_data]
 
         else:
             print("Failed to fetch title or price.")
@@ -130,5 +134,5 @@ if __name__ == "__main__":
     product_data = fetch_webpage_content(url)
 
     if product_data:
-        title, current_price, details = product_data
-        insert_or_update_product(title, current_price)
+        title, current_price, details,image_url = product_data
+        insert_or_update_product(title, current_price,image_url)
