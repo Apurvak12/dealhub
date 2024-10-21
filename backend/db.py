@@ -91,3 +91,4 @@ def get_product_by_title(title):
     product = cursor.fetchone()
     conn.close()
     return product
+
