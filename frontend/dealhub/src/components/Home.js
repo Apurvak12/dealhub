@@ -4,9 +4,10 @@ import Searchbar from './Searchbar';
 import ProductCard from './ProductCard';
 import rightarrow from '../assests/icons/arrow-right.svg'; 
 
+
 const getAllProducts = async () => {
   try {
-    const response = await fetch('https://your-api-url.com/products');
+    const response = await fetch('http://127.0.0.1:5000/api/products');
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -64,7 +65,7 @@ const Home = () => {
         <h2 className="home-section-title">Trending</h2>
 
         <div className="home-product-grid">
-          {allProducts.map((product) => (
+          {allProducts?.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

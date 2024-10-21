@@ -5,29 +5,16 @@ import Home from './components/Home';
 import PriceInfoCard from './components/PriceInfoCard';
 import ProductCard from './components/ProductCard';
 import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  const [products, setProducts] = useState([]);
-  const [priceInfo, setPriceInfo] = useState({ title: '', iconSrc: '', value: '' });
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('/api/products');
-        setProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  
 
   return (
     <>
       <Navbar />
       <Home />
-      <PriceInfoCard
+      {/* <PriceInfoCard
         title={priceInfo.title}
         iconSrc={priceInfo.iconSrc}
         value={priceInfo.value}
@@ -36,7 +23,8 @@ function App() {
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
-      </div>
+      </div> */}
+
     </>
   );
 }
