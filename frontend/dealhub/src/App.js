@@ -13,10 +13,10 @@ function App() {
   return (
     <>
       <Navbar />
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={<Home />} /> {/* Render Home on the root path */}
-        <Route path="/products/:id" element={<Page />} /> {/* Corrected this line */}
-      </Routes>
+        {/* <Route path="/products/:id" element={<Page />} /> Corrected this line */}
+      {/* </Routes> */} 
       {/* Uncomment if you want to include PriceInfoCard and ProductCard outside the routes */}
       {/* <PriceInfoCard
         title={priceInfo.title}

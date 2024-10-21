@@ -1,123 +1,59 @@
-from flask import Flask
-from pymongo import MongoClient
-from bson.objectid import ObjectId
-from scrapping import scrape_amazon_product
-from utils import get_average_price, get_highest_price, get_lowest_price
-from nodemailer import generate_email_body, send_email
+from flask import Flask, request, jsonify
+from db import create_table, insert_or_update_product, get_all_products, get_product_info
+from scrapping import fetch_webpage_content
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-# Initialize MongoDB client
-client = MongoClient("your_mongodb_uri")
-db = client['your_database_name']
-products_collection = db['products']
+@app.route('/fetch', methods=['POST'])
+def fetch_product():
+    """Fetch product details and store them in the database."""
+    data = request.json
+    url = data.get('url')
 
+    if not url:
+        return jsonify({'error': 'URL is required'}), 400
 
-def connect_to_db():
-    # This function is redundant if you are using the global `db` object
-    return db
+    title, current_price, _ = fetch_webpage_content(url)
+    
+    if title and current_price:
+        insert_or_update_product(title, current_price)
+        return jsonify({'message': f'Updated {title} in the database.','title':title, 'current_price':current_price,'image':"image"}), 200
+    else:
+        return jsonify({'error': 'Failed to fetch product info.'}), 500
+@app.route('/fetchs', methods=['POST'])
+def fetchs():
+    # Get the JSON data from the request
+    data = request.get_json()
+    
+    # Check if title is provided in the request
+    if not data or 'title' not in data:
+        return jsonify({"error": "Title is required."}), 400
 
+    title = data['title']
+    product_details = get_product_info(title)
 
-def scrape_and_store_product(product_url):
-    if not product_url:
-        return
+    if product_details:
+        return jsonify({
+            "id": product_details[0],
+            "title": product_details[1],
+            "current_price": product_details[2],
+            "original_price": product_details[3],
+            "lowest_price": product_details[4],
+            "highest_price": product_details[5],
+            "average_price": product_details[6],
+            "last_updated": product_details[7]
+        })
+    else:
+        return jsonify({"error": "Product not found."}), 404
 
-    try:
-        scraped_product = scrape_amazon_product(product_url)
+@app.route('/products', methods=['GET'])
+def get_products():
+    """Get all products."""
+    products = get_all_products()
+    return jsonify(products)
 
-        if not scraped_product:
-            return
-
-        product = scraped_product
-
-        existing_product = products_collection.find_one({"url": scraped_product['url']})
-
-        if existing_product:
-            updated_price_history = existing_product['priceHistory'] + [{'price': scraped_product['currentPrice']}]
-
-            product = {
-                **scraped_product,
-                'priceHistory': updated_price_history,
-                'lowestPrice': get_lowest_price(updated_price_history),
-                'highestPrice': get_highest_price(updated_price_history),
-                'averagePrice': get_average_price(updated_price_history),
-            }
-
-        new_product = products_collection.find_one_and_update(
-            {"url": scraped_product['url']},
-            {"$set": product},
-            upsert=True,
-            return_document=True
-        )
-
-        # Assuming you have a function to handle revalidation logic
-        revalidate_path(f"/products/{new_product['_id']}")
-
-    except Exception as error:
-        raise Exception(f"Failed to create/update product: {str(error)}")
-
-
-def get_product_by_id(product_id):
-    try:
-        product = products_collection.find_one({"_id": ObjectId(product_id)})
-
-        if not product:
-            return None
-
-        return product
-
-    except Exception as error:
-        print(error)
-
-
-def get_all_products():
-    try:
-        products = list(products_collection.find())
-        return products
-
-    except Exception as error:
-        print(error)
-
-
-def get_similar_products(product_id):
-    try:
-        current_product = products_collection.find_one({"_id": ObjectId(product_id)})
-
-        if not current_product:
-            return None
-
-        similar_products = list(products_collection.find({"_id": {"$ne": ObjectId(product_id)}}).limit(3))
-        return similar_products
-
-    except Exception as error:
-        print(error)
-
-
-def add_user_email_to_product(product_id, user_email):
-    try:
-        product = products_collection.find_one({"_id": ObjectId(product_id)})
-
-        if not product:
-            return
-
-        user_exists = any(user['email'] == user_email for user in product.get('users', []))
-
-        if not user_exists:
-            product['users'].append({'email': user_email})
-
-            products_collection.update_one(
-                {"_id": ObjectId(product_id)},
-                {"$set": {"users": product['users']}}
-            )
-
-            email_content = generate_email_body(product, "WELCOME")
-
-            send_email(email_content, [user_email])
-
-    except Exception as error:
-        print(error)
-
-
-# Example usage
-if __name__ == "__main__":
+if __name__ == '__main__':
+    create_table()
     app.run(debug=True)

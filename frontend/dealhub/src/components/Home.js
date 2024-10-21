@@ -1,35 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Hero from './Hero';
 import Searchbar from './Searchbar';
 import ProductCard from './ProductCard';
-import rightarrow from '../assests/icons/arrow-right.svg'; 
-
-
-const getAllProducts = async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:5000/api/products');
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
-  }
-};
+import rightarrow from '../assests/icons/arrow-right.svg';
 
 const Home = () => {
-  const [allProducts, setAllProducts] = React.useState([]);
+  const [url, setUrl] = useState(''); 
 
-  React.useEffect(() => {
-    const fetchProducts = async () => {
-      const products = await getAllProducts();
-      setAllProducts(products);
-    };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/fetch', { // Adjust to your actual API URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
 
-    fetchProducts();
-  }, []);
+      if (!response.ok) {
+        throw new Error('Failed to fetch product info');
+      }
+
+      const result = await response.json();
+      console.log(result); // Check the result from the API
+
+      // reroute to the product page
+      // results["title"]
+      // method ( http://localhost:5000/fetchs ) tyacht title pass karu
+      const details = await fetch('http://localhost:5000/fetchs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: result.title }),
+
+      });
+      if(!details.ok){
+        throw new Error('Failed to fetch product details');
+      }
+      const productDetails = await details.json();
+      console.log(productDetails);
+      
+    } catch (error) {
+      console.error('Error submitting URL:', error);
+    }
+  };
 
   return (
     <>
@@ -37,12 +53,8 @@ const Home = () => {
         <div className="home-hero-container">
           <div className="home-hero-content"> 
             <p className="home-subtext">
-            <span>Smart Shopping Starts Here:</span>  
-              <img
-                src={rightarrow}
-                alt="rightarrow"
-                className="home-arrow-icon"
-              />
+              <span>Smart Shopping Starts Here:</span>  
+              <img src={rightarrow} alt="rightarrow" className="home-arrow-icon" />
             </p>
 
             <h1 className="home-title">
@@ -54,20 +66,19 @@ const Home = () => {
               Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.
             </p>
 
-            <Searchbar />
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Enter product URL"
+                required
+              />
+              <button type="submit">Submit</button>
+            </form>
           </div>
 
           <Hero />
-        </div>
-      </section>
-
-      <section className="home-trending-section">
-        <h2 className="home-section-title">Trending</h2>
-
-        <div className="home-product-grid">
-          {allProducts?.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
         </div>
       </section>
     </>
