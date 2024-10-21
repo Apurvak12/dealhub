@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import PriceInfoCard from './components/PriceInfoCard';
 import ProductCard from './components/ProductCard';
+import Page from '../src/products/[id]/page'; // Ensure this path is correct
 import "./App.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  
-
   return (
     <>
       <Navbar />
-      <Home />
+      <Routes>
+        <Route path="/" element={<Home />} /> {/* Render Home on the root path */}
+        <Route path="/products/:id" element={<Page />} /> {/* Corrected this line */}
+      </Routes>
+      {/* Uncomment if you want to include PriceInfoCard and ProductCard outside the routes */}
       {/* <PriceInfoCard
         title={priceInfo.title}
         iconSrc={priceInfo.iconSrc}
@@ -24,10 +28,8 @@ function App() {
           <ProductCard key={product._id} product={product} />
         ))}
       </div> */}
-
     </>
   );
 }
 
 export default App;
-

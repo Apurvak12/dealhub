@@ -1,10 +1,10 @@
 import React from 'react'
-
-const ProductDetails=()=>{
-    return(
-        <div>ProductDetails
-        
-        </div>
-    )
+type Props= {
+ params:{id:string}
 }
+const ProductDetails= async ({params:{id}}:Props)=>{
+    const product= await getProductsById(id);
+    if(!product)
+        redirect('/')
+   
 export default ProductDetails;
